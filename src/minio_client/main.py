@@ -41,6 +41,14 @@ class MinioClient:
         if not self.bucket_exists(bucket_name):
             self.client.make_bucket(bucket_name)
 
+    def remove_bucket(self, bucket_name):
+        """Delete a bucket.
+
+        Args:
+            bucket_name (str): Name of the bucket to delete.
+        """
+        self.client.remove_bucket(bucket_name)
+
     def list_buckets(self):
         """List all buckets.
 
@@ -95,8 +103,8 @@ class MinioClient:
 # Example usage (remove or adapt for production)
 if __name__ == "__main__":
     endpoint = os.getenv("MINIO_ENDPOINT", "localhost:9000")
-    access_key = os.getenv("MINIO_ACCESS_KEY", "minioadmin")
-    secret_key = os.getenv("MINIO_SECRET_KEY", "minioadmin")
+    access_key = os.getenv("MINIO_ACCESS_KEY", "accesskey")
+    secret_key = os.getenv("MINIO_SECRET_KEY", "secretkey")
     client = MinioClient(endpoint, access_key, secret_key, secure=False)
 
     bucket = "test-bucket"
@@ -104,6 +112,8 @@ if __name__ == "__main__":
     object_name = "example.txt"
 
     try:
+        bucket_list = client.list_buckets()
+        print("Buckets:", bucket_list)
         client.upload_file(bucket, object_name, file_path)
         print("Uploaded:", object_name)
         print("Objects in bucket:", client.list_objects(bucket))
@@ -111,5 +121,7 @@ if __name__ == "__main__":
         print("Downloaded:", object_name)
         client.remove_object(bucket, object_name)
         print("Removed:", object_name)
+        client.remove_bucket(bucket)
+        print("Removed bucket:", bucket)
     except S3Error as err:
         print("MinIO error:", err)
