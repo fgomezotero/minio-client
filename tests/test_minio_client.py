@@ -93,8 +93,8 @@ class TestMinioClient(unittest.TestCase):
             # Clean up files
             if os.path.exists(test_file_path):
                 os.unlink(test_file_path)
-            # if os.path.exists(download_path):
-            #     os.unlink(download_path)
+            if os.path.exists(download_path):
+                os.unlink(download_path)
 
     def test_list_objects_with_prefix(self):
         """Test listing objects with prefix filter"""
